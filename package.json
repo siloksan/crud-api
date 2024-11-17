@@ -1,0 +1,41 @@
+{
+	"name": "crud-api",
+	"version": "1.0.0",
+	"description": "CRUD API with in-memory database",
+	"main": "dist/index.js",
+	"scripts": {
+		"start:dev": "nodemon --watch src --ext ts,json --exec ts-node -r tsconfig-paths/register src/index.ts",
+		"start:prod": "npm run build && node dist/index.js",
+		"build": "webpack --config webpack.config.js",
+		"start:multi": "node src/cluster.js",
+		"lint:code": "eslint .",
+		"lint:types": "tsc --noEmit",
+		"lint": "npm run lint:code && npm run lint:types",
+		"format": "prettier --write ."
+	},
+	"dependencies": {
+		"dotenv": "^16.1.4",
+		"uuid": "^9.0.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.6.1",
+		"@typescript-eslint/eslint-plugin": "^6.21.0",
+		"@typescript-eslint/parser": "^6.21.0",
+		"cross-env": "^7.0.3",
+		"eslint": "^8.57.1",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-import-resolver-typescript": "^3.6.3",
+		"eslint-plugin-prettier": "^5.2.1",
+		"husky": "^8.0.3",
+		"lint-staged": "^14.0.0",
+		"nodemon": "^3.0.1",
+		"prettier": "^3.0.3",
+		"ts-loader": "^9.5.1",
+		"ts-node-dev": "^2.0.0",
+		"tsconfig-paths": "^4.2.0",
+		"typescript": "^5.6.3",
+		"webpack": "^5.89.0",
+		"webpack-cli": "^5.1.4",
+		"webpack-node-externals": "^3.0.0"
+	}
+}
