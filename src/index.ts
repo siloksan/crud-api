@@ -1,6 +1,10 @@
+import dotenv from 'dotenv';
 import { MyRepository } from '@/repositories';
 import * as http from 'node:http';
-export const PORT = 3000;
+
+dotenv.config();
+
+export const PORT = process.env.PORT ?? 3000;
 
 console.log('MyRepository: ', MyRepository);
 const server = http.createServer((req, res) => {
