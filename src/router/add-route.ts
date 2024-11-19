@@ -14,16 +14,19 @@ export function addRoute(method: HttpMethods, path: string, handler: RouteNode['
 		current.children[method] = { children: {} };
 	}
 
-	current = current.children[method];
+	current = current.children[method]!;
+
+	if (!current) {
+		throw new Error(`Failed to initialize method node for ${method}`);
+	}
 
 	const parts = path.split('/').filter(Boolean);
 	for (const part of parts) {
 		if (!current.children[part]) {
 			current.children[part] = { children: {} };
 		}
-		current = current.children[part];
+		current = current.children[part]!;
 	}
 
 	current.handler = handler;
-	console.log('routes: ', routes);
 }
