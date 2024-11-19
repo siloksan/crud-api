@@ -19,11 +19,11 @@ export function findHandler({ url, method }: FindHandlerProps) {
 
 	const parts = url.split('/').filter(Boolean);
 
-	current = current.children[method];
+	current = current.children[method]!;
 
 	for (const part of parts) {
 		if (current.children[part]) {
-			current = current.children[part];
+			current = current.children[part]!;
 		} else if (current.children[DYNAMIC_PATH]) {
 			current = current.children[DYNAMIC_PATH];
 		} else {

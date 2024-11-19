@@ -1,8 +1,8 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import { ControllerProps } from '@/types';
 
 export interface RouteNode {
 	children: Record<string, RouteNode>;
-	handler?: (req: IncomingMessage, res: ServerResponse) => void;
+	handler?: (args: ControllerProps) => void;
 }
 
 export const routes: RouteNode = { children: {} };
