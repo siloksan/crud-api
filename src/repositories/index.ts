@@ -10,7 +10,7 @@ export class UserRepository {
 		return Array.from(this.users.values());
 	}
 
-	public async get(id: string) {
+	public async getById(id: string) {
 		return this.users.get(id);
 	}
 
@@ -28,5 +28,3 @@ export class UserRepository {
 		this.users.delete(id);
 	}
 }
-
-const dontUse = 0;
