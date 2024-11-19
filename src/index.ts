@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import * as http from 'node:http';
-import { HTTP_METHODS, HttpMethods, STATUS } from '@/constants';
+import { DYNAMIC_PATH, HTTP_METHODS, HttpMethods, STATUS, STATUS_MESSAGES } from '@/constants';
 import { findHandler, addRoute } from '@/router';
 import { DB } from './db';
 import { UserRepository } from '@/repositories';
@@ -20,20 +20,23 @@ const server = http.createServer((req, res) => {
 	const { url, method } = req;
 	if (!url || !method || !(method in HTTP_METHODS)) {
 		res.writeHead(STATUS.BAD_REQUEST, { 'Content-Type': 'text/plain' });
-		res.end(STATUS.BAD_REQUEST);
+		res.end(STATUS_MESSAGES[STATUS.BAD_REQUEST].badRequest);
 	} else {
-		const handler = findHandler({ url, method: method as HttpMethods });
 		try {
+			const handler = findHandler({ url, method: method as HttpMethods });
 			handler({ req, res });
 			logger(`[${method}] ${url} status: ${res.statusCode}`);
 		} catch (error) {
 			res.writeHead(STATUS.INTERNAL_SERVER_ERROR, { 'Content-Type': 'text/plain' });
-			res.end(STATUS.INTERNAL_SERVER_ERROR);
+			res.end(STATUS_MESSAGES[STATUS.INTERNAL_SERVER_ERROR]);
+			logger(`[${method}] ${url} status: ${res.statusCode}`);
 		}
 	}
 });
 
 addRoute('GET', 'api/users', usersController.getUsers);
+addRoute('GET', `api/users/${DYNAMIC_PATH}`, usersController.getById);
+addRoute('POST', `api/users`, usersController.create);
 
 server.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);

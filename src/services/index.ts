@@ -1,4 +1,4 @@
-import { User } from '@/models';
+import { User, UserData } from '@/models';
 import { UserRepository } from '@/repositories';
 
 export class UserService {
@@ -16,7 +16,7 @@ export class UserService {
 		return this.usersRepository.getById(id);
 	}
 
-	async create(user: User) {
+	async create(user: UserData) {
 		return this.usersRepository.create(user);
 	}
 
