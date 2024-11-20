@@ -41,6 +41,11 @@ export class UserRepository {
 	}
 
 	public async delete(id: string) {
+		if (!this.users.has(id)) {
+			throw new Error(`${STATUS.NOT_FOUND}||${STATUS_MESSAGES[STATUS.NOT_FOUND]}`);
+		}
+
 		this.users.delete(id);
+		return true;
 	}
 }

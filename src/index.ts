@@ -44,6 +44,7 @@ addRoute('GET', 'api/users', usersController.getUsers);
 addRoute('GET', `api/users/${DYNAMIC_PATH}`, usersController.getById);
 addRoute('POST', `api/users`, usersController.create);
 addRoute('PUT', `api/users/${DYNAMIC_PATH}`, usersController.update);
+addRoute('DELETE', `api/users/${DYNAMIC_PATH}`, usersController.delete);
 
 server.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);

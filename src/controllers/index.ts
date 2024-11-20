@@ -24,7 +24,11 @@ export class UsersController {
 	};
 
 	getById = async ({ req, res }: ControllerProps) => {
-		const url = req?.url;
+		if (!req) {
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].badRequest}`);
+		}
+
+		const url = req.url;
 		const id = url?.split('/').pop();
 
 		if (!id) {
@@ -89,5 +93,21 @@ export class UsersController {
 		}
 	};
 
-	// async delete() {}
+	delete = async ({ req, res }: ControllerProps) => {
+		if (!req) {
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].badRequest}`);
+		}
+
+		const url = req.url;
+		const id = url?.split('/').pop();
+
+		if (!id) {
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidId}`);
+		}
+		const result = await this.usersService.delete(id);
+		if (result) {
+			res.writeHead(204, { 'Content-Type': 'text/plain' });
+			res.end();
+		}
+	};
 }
