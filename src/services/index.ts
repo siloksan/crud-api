@@ -1,4 +1,4 @@
-import { User, UserData } from '@/models';
+import { UserData } from '@/models';
 import { UserRepository } from '@/repositories';
 
 export class UserService {
@@ -20,7 +20,7 @@ export class UserService {
 		return this.usersRepository.create(user);
 	}
 
-	async update(id: string, user: User) {
+	async update(id: string, user: Partial<UserData>) {
 		return this.usersRepository.update(id, user);
 	}
 

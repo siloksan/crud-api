@@ -7,7 +7,7 @@ describe('addRoute function', () => {
 	});
 
 	test('should add a route with a new method', () => {
-		const handler = () => {};
+		const handler = async () => {};
 		addRoute('GET', 'users', handler);
 
 		expect(routes.children.GET).toBeDefined();
@@ -16,7 +16,7 @@ describe('addRoute function', () => {
 	});
 
 	test('should add a route with a path that has multiple parts', () => {
-		const handler = () => {};
+		const handler = async () => {};
 		addRoute('GET', 'users/:id', handler);
 		expect(routes.children.GET?.children.users).toBeDefined();
 		expect(routes.children.GET?.children.users?.children[':id']).toBeDefined();
@@ -24,8 +24,8 @@ describe('addRoute function', () => {
 	});
 
 	test('should add multiple methods', () => {
-		const getHandler = () => {},
-			postHandler = () => {};
+		const getHandler = async () => {},
+			postHandler = async () => {};
 
 		addRoute('GET', 'users', getHandler);
 		addRoute('POST', 'users', postHandler);
@@ -35,8 +35,8 @@ describe('addRoute function', () => {
 	});
 
 	test('should add multiple paths', () => {
-		const getHandler1 = () => {},
-			getHandler2 = () => {};
+		const getHandler1 = async () => {},
+			getHandler2 = async () => {};
 
 		addRoute('GET', 'users', getHandler1);
 		addRoute('GET', 'users/:id', getHandler2);

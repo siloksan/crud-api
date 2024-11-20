@@ -1,9 +1,8 @@
 import { STATUS, STATUS_MESSAGES } from '@/constants';
 import { UserService } from '@/services';
 import { ControllerProps } from '@/types';
-import { handleError } from '@/utils/handle-error';
 import { parseBody } from '@/utils/parse-body';
-import { isValidUserData } from '@/validators';
+import { isValidUserData, isValidUserProperty } from '@/validators';
 
 export class UsersController {
 	private readonly usersService: UserService;
@@ -18,60 +17,77 @@ export class UsersController {
 			res.writeHead(STATUS.OK, { 'Content-Type': 'application/json, charset=utf-8' });
 			res.end(JSON.stringify(users));
 		} catch (error) {
-			res.writeHead(STATUS.INTERNAL_SERVER_ERROR, { 'Content-Type': 'text/plain' });
-			res.end(STATUS_MESSAGES[STATUS.INTERNAL_SERVER_ERROR]);
-			handleError(error);
+			if (error instanceof Error) {
+				throw new Error(`${STATUS.INTERNAL_SERVER_ERROR}||${STATUS_MESSAGES[STATUS.INTERNAL_SERVER_ERROR]}`);
+			}
 		}
 	};
 
 	getById = async ({ req, res }: ControllerProps) => {
 		const url = req?.url;
 		const id = url?.split('/').pop();
+
 		if (!id) {
-			res.writeHead(STATUS.BAD_REQUEST, { 'Content-Type': 'text/plain' });
-			res.end(STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidId);
-			return;
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidId}`);
 		}
+
 		try {
 			const user = await this.usersService.getById(id);
-			if (!user) {
-				res.writeHead(STATUS.NOT_FOUND, { 'Content-Type': 'text/plain' });
-				res.end(STATUS_MESSAGES[STATUS.NOT_FOUND]);
-				return;
+			if (user) {
+				res.writeHead(STATUS.OK, { 'Content-Type': 'application/json, charset=utf-8' });
+				res.end(JSON.stringify(user));
 			}
-			res.writeHead(STATUS.OK, { 'Content-Type': 'application/json, charset=utf-8' });
-			res.end(JSON.stringify(user));
 		} catch (error) {
-			res.writeHead(STATUS.INTERNAL_SERVER_ERROR, { 'Content-Type': 'text/plain' });
-			res.end(STATUS_MESSAGES[STATUS.INTERNAL_SERVER_ERROR]);
-			handleError(error);
+			if (error instanceof Error) {
+				throw new Error(error.message);
+			}
 		}
 	};
 
 	create = async ({ req, res }: ControllerProps) => {
 		if (!req) {
-			res.writeHead(STATUS.BAD_REQUEST, { 'Content-Type': 'text/plain' });
-			res.end(STATUS_MESSAGES[STATUS.BAD_REQUEST].badRequest);
-			return;
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].badRequest}`);
 		}
 
 		try {
 			const user = await parseBody(req);
 			if (!isValidUserData(user)) {
-				res.writeHead(STATUS.BAD_REQUEST, { 'Content-Type': 'text/plain' });
-				res.end(STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidData);
-				return;
+				throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidData}`);
 			}
 
 			const createdUser = await this.usersService.create(user);
 			res.writeHead(STATUS.CREATED, { 'Content-Type': 'application/json, charset=utf-8' });
 			res.end(JSON.stringify(createdUser));
 		} catch (error) {
-			res.writeHead(STATUS.BAD_REQUEST, { 'Content-Type': 'text/plain' });
-			res.end(STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidData);
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidData}`);
 		}
 	};
-	// async getAll() {}
-	// async update() {}
+
+	update = async ({ req, res }: ControllerProps) => {
+		if (!req) {
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].badRequest}`);
+		}
+
+		const url = req.url;
+		const id = url?.split('/').pop();
+
+		if (!id) {
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidId}`);
+		}
+
+		const user = await parseBody(req);
+		if (!isValidUserProperty(user)) {
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidData}`);
+		}
+
+		console.log('user: ', user);
+		const updatedUser = await this.usersService.update(id, user);
+
+		if (user) {
+			res.writeHead(STATUS.OK, { 'Content-Type': 'application/json, charset=utf-8' });
+			res.end(JSON.stringify(updatedUser));
+		}
+	};
+
 	// async delete() {}
 }
