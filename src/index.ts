@@ -27,9 +27,13 @@ const server = http.createServer((req, res) => {
 			handler({ req, res });
 			logger(`[${method}] ${url} status: ${res.statusCode}`);
 		} catch (error) {
-			res.writeHead(STATUS.INTERNAL_SERVER_ERROR, { 'Content-Type': 'text/plain' });
-			res.end(STATUS_MESSAGES[STATUS.INTERNAL_SERVER_ERROR]);
-			logger(`[${method}] ${url} status: ${res.statusCode}`);
+			console.error('error: ', error);
+			if (error instanceof Error) {
+				const [statusCode, message] = error.message.split('||');
+				res.writeHead(Number(statusCode), { 'Content-Type': 'text/plain' });
+				res.end(message);
+				logger(`[${method}] ${url} status: ${statusCode}`);
+			}
 		}
 	}
 });
@@ -37,6 +41,7 @@ const server = http.createServer((req, res) => {
 addRoute('GET', 'api/users', usersController.getUsers);
 addRoute('GET', `api/users/${DYNAMIC_PATH}`, usersController.getById);
 addRoute('POST', `api/users`, usersController.create);
+addRoute('PUT', `api/users/${DYNAMIC_PATH}`, usersController.update);
 
 server.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);
