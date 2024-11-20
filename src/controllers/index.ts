@@ -63,7 +63,7 @@ export class UsersController {
 		}
 	};
 
-	async update({ req, res }: ControllerProps) {
+	update = async ({ req, res }: ControllerProps) => {
 		if (!req) {
 			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].badRequest}`);
 		}
@@ -77,17 +77,17 @@ export class UsersController {
 
 		const user = await parseBody(req);
 		if (!isValidUserProperty(user)) {
-			console.log('user: ', user);
 			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidData}`);
 		}
 
+		console.log('user: ', user);
 		const updatedUser = await this.usersService.update(id, user);
 
 		if (user) {
 			res.writeHead(STATUS.OK, { 'Content-Type': 'application/json, charset=utf-8' });
 			res.end(JSON.stringify(updatedUser));
 		}
-	}
+	};
 
 	// async delete() {}
 }

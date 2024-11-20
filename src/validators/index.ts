@@ -13,7 +13,7 @@ export function isObject(value: unknown): value is object {
 }
 
 function isArrayString(value: unknown): value is string[] {
-	return Array.isArray(value) && value.length > 0 ? value.every((item) => typeof item === 'string') : true;
+	return Array.isArray(value) && value.every((item) => typeof item === 'string');
 }
 
 export function isValidUserData(user: unknown): user is UserData {
@@ -56,5 +56,5 @@ export function isValidUserProperty(userData: unknown): userData is Partial<User
 		return false;
 	}
 
-	return userDataKeys.some((key) => !allowedKeys.includes(key));
+	return !userDataKeys.some((key) => !allowedKeys.includes(key));
 }
