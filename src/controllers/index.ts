@@ -24,7 +24,11 @@ export class UsersController {
 	};
 
 	getById = async ({ req, res }: ControllerProps) => {
-		const url = req?.url;
+		if (!req) {
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].badRequest}`);
+		}
+
+		const url = req.url;
 		const id = url?.split('/').pop();
 
 		if (!id) {
@@ -63,7 +67,7 @@ export class UsersController {
 		}
 	};
 
-	async update({ req, res }: ControllerProps) {
+	update = async ({ req, res }: ControllerProps) => {
 		if (!req) {
 			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].badRequest}`);
 		}
@@ -77,17 +81,33 @@ export class UsersController {
 
 		const user = await parseBody(req);
 		if (!isValidUserProperty(user)) {
-			console.log('user: ', user);
 			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidData}`);
 		}
 
+		console.log('user: ', user);
 		const updatedUser = await this.usersService.update(id, user);
 
 		if (user) {
 			res.writeHead(STATUS.OK, { 'Content-Type': 'application/json, charset=utf-8' });
 			res.end(JSON.stringify(updatedUser));
 		}
-	}
+	};
 
-	// async delete() {}
+	delete = async ({ req, res }: ControllerProps) => {
+		if (!req) {
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].badRequest}`);
+		}
+
+		const url = req.url;
+		const id = url?.split('/').pop();
+
+		if (!id) {
+			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidId}`);
+		}
+		const result = await this.usersService.delete(id);
+		if (result) {
+			res.writeHead(204, { 'Content-Type': 'text/plain' });
+			res.end();
+		}
+	};
 }

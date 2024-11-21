@@ -19,20 +19,20 @@ describe('findHandler function', () => {
 	});
 
 	test('should return handler when route found with static path', () => {
-		const handler = () => {};
+		const handler = async () => {};
 		routes.children.GET = { children: { users: { children: {}, handler } } };
 		expect(findHandler({ url: '/users', method: 'GET' })).toBe(handler);
 	});
 
 	test('should return handler when route found with dynamic path', () => {
-		const handler = () => {};
+		const handler = async () => {};
 		routes.children.GET = { children: { users: { children: { [DYNAMIC_PATH]: { children: {}, handler } } } } };
 
 		expect(findHandler({ url: `/users/${DYNAMIC_PATH}`, method: 'GET' })).toBe(handler);
 	});
 
 	it('should return handler when route found with multiple path parts', () => {
-		const handler = () => {};
+		const handler = async () => {};
 		routes.children.POST = { children: { users: { children: { admin: { children: {}, handler } } } } };
 
 		expect(findHandler({ url: '/users/admin', method: 'POST' })).toBe(handler);
