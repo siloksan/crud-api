@@ -1,12 +1,13 @@
 import dotenv from 'dotenv';
 import * as http from 'node:http';
-import { DYNAMIC_PATH, HTTP_METHODS, HttpMethods, STATUS, STATUS_MESSAGES } from '@/constants';
+import { HTTP_METHODS, HttpMethods, STATUS, STATUS_MESSAGES } from '@/constants';
 import { findHandler, addRoute } from '@/router';
 import { DB } from './db';
 import { UserRepository } from '@/repositories';
 import { UserService } from '@/services';
 import { UsersController } from '@/controllers';
 import { logger } from './utils/logger';
+import { ROUTES } from './router/routes';
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ const usersController = new UsersController(usersService);
 
 export const PORT = process.env.PORT ?? 3000;
 
-const server = http.createServer(async (req, res) => {
+export const server = http.createServer(async (req, res) => {
 	const { url, method } = req;
 	if (!url || !method || !(method in HTTP_METHODS)) {
 		res.writeHead(STATUS.BAD_REQUEST, { 'Content-Type': 'text/plain' });
@@ -40,11 +41,11 @@ const server = http.createServer(async (req, res) => {
 	}
 });
 
-addRoute('GET', 'api/users', usersController.getUsers);
-addRoute('GET', `api/users/${DYNAMIC_PATH}`, usersController.getById);
-addRoute('POST', `api/users`, usersController.create);
-addRoute('PUT', `api/users/${DYNAMIC_PATH}`, usersController.update);
-addRoute('DELETE', `api/users/${DYNAMIC_PATH}`, usersController.delete);
+addRoute('GET', ROUTES.API.USERS.ROUTE, usersController.getUsers);
+addRoute('GET', ROUTES.API.USERS.ID, usersController.getById);
+addRoute('POST', ROUTES.API.USERS.ROUTE, usersController.create);
+addRoute('PUT', ROUTES.API.USERS.ID, usersController.update);
+addRoute('DELETE', ROUTES.API.USERS.ID, usersController.delete);
 
 server.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);

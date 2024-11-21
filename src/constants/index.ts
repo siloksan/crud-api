@@ -5,12 +5,6 @@ export const HTTP_METHODS = {
 	DELETE: 'DELETE',
 } as const;
 
-export const ERROR_MESSAGES = {
-	routeNotFound: (url: string) => `Route ${url} not found!`,
-	methodNotFound: (method: HttpMethods) => `Method ${method} not found!`,
-	500: 'Internal server error',
-} as const;
-
 export const DYNAMIC_PATH = ':id';
 
 export type HttpMethods = keyof typeof HTTP_METHODS;
