@@ -1,4 +1,4 @@
-import { UserData } from '@/models';
+import { User, UserData } from '@/models';
 
 export function isNonEmptyString(input?: unknown): input is string {
 	return typeof input === 'string' && input?.length > 0;
@@ -57,4 +57,16 @@ export function isValidUserProperty(userData: unknown): userData is Partial<User
 	}
 
 	return !userDataKeys.some((key) => !allowedKeys.includes(key));
+}
+
+export function isValidUser(user: unknown): user is User {
+	if (!isObject(user) || !('id' in user)) {
+		return false;
+	}
+
+	const { id, ...userData } = user || {};
+	if (!isValidUserData(userData)) {
+		return false;
+	}
+	return isNonEmptyString(id);
 }

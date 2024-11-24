@@ -4,10 +4,10 @@
 	"description": "CRUD API with in-memory database",
 	"main": "dist/index.js",
 	"scripts": {
-		"start:dev": "nodemon --watch src --ext ts,json --exec ts-node -r tsconfig-paths/register src/index.ts",
+		"start:dev": "nodemon --watch src --ext ts,json --exec ts-node -r tsconfig-paths/register  src/single-server.ts",
 		"start:prod": "npm run build && node dist/index.js",
+		"start:multi": "nodemon --watch src --ext ts,json --exec ts-node -r tsconfig-paths/register src/multi-server.ts -- --worker",
 		"build": "webpack --config webpack.config.js",
-		"start:multi": "node src/cluster.js",
 		"lint:code": "eslint \"src/**/*.ts\" --fix",
 		"lint:types": "tsc --noEmit",
 		"lint": "npm run lint:code && npm run lint:types",

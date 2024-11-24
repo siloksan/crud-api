@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import { UserData, UsersDB } from '@/models';
 import { STATUS, STATUS_MESSAGES } from '@/constants';
+import { Repository } from '@/types';
 
-export class UserRepository {
+export class UserRepository implements Repository<UserData, UserData> {
 	private readonly users: UsersDB;
 	constructor(db: UsersDB) {
 		this.users = db;
