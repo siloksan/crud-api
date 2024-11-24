@@ -103,12 +103,11 @@ npm run start:multi
 -   Request Body:
 
 ```json
-    Copy code
-    {
-    "username": "John Doe",
-    "age": 30,
-    "hobbies": ["reading", "coding"]
-    }
+{
+	"username": "John Doe",
+	"age": 30,
+	"hobbies": ["reading", "coding"]
+}
 ```
 
 -   Status Codes:
@@ -121,12 +120,11 @@ npm run start:multi
 -   Request Body:
 
 ```json
-    Copy code
-    {
-    "username": "John Doe",
-    "age": 31,
-    "hobbies": ["reading"]
-    }
+{
+	"username": "John Doe",
+	"age": 31,
+	"hobbies": ["reading"]
+}
 ```
 
 -   Status Codes:
@@ -148,7 +146,7 @@ npm run start:multi
 Run tests to verify API functionality:
 
 ```bash
-npm test
+npm run test
 ```
 
 ### Scenarios Covered
