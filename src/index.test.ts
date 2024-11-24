@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { server } from './index';
+import { server } from './server';
 import { User, UsersDB } from './models';
 import { addRoute } from './router';
 import { UserRepository } from './repositories';

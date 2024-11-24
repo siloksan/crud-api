@@ -1,10 +1,10 @@
-import { UserData } from '@/models';
-import { UserRepository } from '@/repositories';
+import { User, UserData } from '@/models';
+import { Repository } from '@/types';
 
 export class UserService {
-	private readonly usersRepository: UserRepository;
+	private readonly usersRepository: Repository<User, UserData>;
 
-	constructor(usersRepository: UserRepository) {
+	constructor(usersRepository: Repository<User, UserData>) {
 		this.usersRepository = usersRepository;
 	}
 

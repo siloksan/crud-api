@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import * as http from 'node:http';
 import { HTTP_METHODS, HttpMethods, STATUS, STATUS_MESSAGES } from '@/constants';
 import { findHandler, addRoute } from '@/router';
@@ -8,14 +7,13 @@ import { UserService } from '@/services';
 import { UsersController } from '@/controllers';
 import { logger } from './utils/logger';
 import { ROUTES } from './router/routes';
+import { argv } from 'node:process';
+import { ClusterUserRepository } from './repositories/cluster-user-repository';
 
-dotenv.config();
-
-const usersRepository = new UserRepository(DB);
+const isWorker = argv.includes('--worker');
+const usersRepository = isWorker ? new ClusterUserRepository() : new UserRepository(DB);
 const usersService = new UserService(usersRepository);
 const usersController = new UsersController(usersService);
-
-export const PORT = process.env.PORT ?? 3000;
 
 export const server = http.createServer(async (req, res) => {
 	const { url, method } = req;
@@ -35,7 +33,7 @@ export const server = http.createServer(async (req, res) => {
 				res.end(
 					status === STATUS.INTERNAL_SERVER_ERROR ? STATUS_MESSAGES[STATUS.INTERNAL_SERVER_ERROR] : message
 				);
-				logger(`[${method}] ${url} status: ${statusCode}`);
+				logger(`[${method}]${url} status: ${statusCode}`);
 			}
 		}
 	}
@@ -47,6 +45,8 @@ addRoute('POST', ROUTES.API.USERS.ROUTE, usersController.create);
 addRoute('PUT', ROUTES.API.USERS.ID, usersController.update);
 addRoute('DELETE', ROUTES.API.USERS.ID, usersController.delete);
 
-server.listen(PORT, () => {
-	console.log(`Server is running on http://localhost:${PORT}`);
-});
+export function startServer(port: number) {
+	server.listen(port, () => {
+		console.log(`Server is running on http://localhost:${port}`);
+	});
+}
