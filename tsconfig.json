@@ -1,9 +1,7 @@
 {
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
-		"lib": [
-			"ESNext"
-		],
+		"lib": ["ESNext"],
 		"module": "CommonJS",
 		"moduleResolution": "node",
 		"noUncheckedIndexedAccess": true,
@@ -23,16 +21,9 @@
 		"forceConsistentCasingInFileNames": true,
 		"baseUrl": "./src",
 		"paths": {
-			"@/*": [
-				"*"
-			]
+			"@/*": ["*"]
 		}
 	},
-	"include": [
-		"src/**/*.ts"
-	],
-	"exclude": [
-		"node_modules",
-		"dist"
-	]
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules", "dist"]
 }

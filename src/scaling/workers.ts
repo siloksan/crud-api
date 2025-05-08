@@ -5,9 +5,9 @@ export interface WorkerWithPort {
 	port: number;
 	worker: Worker;
 }
+
 export function getWorkers(cluster: Cluster, basePort: number): WorkerWithPort[] {
-	const numCPUs = os.cpus().length;
-	const workers = Array.from({ length: numCPUs }, (_, index) => {
+	return os.cpus().map((_, index) => {
 		const port = basePort + index + 1;
 		const worker = cluster.fork({ WORKER_PORT: port });
 		return {
@@ -15,6 +15,4 @@ export function getWorkers(cluster: Cluster, basePort: number): WorkerWithPort[]
 			port,
 		};
 	});
-
-	return workers;
 }

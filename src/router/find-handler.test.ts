@@ -1,6 +1,6 @@
 import { findHandler } from './find-handler';
-import { routes } from './routes';
-import { DYNAMIC_PATH, STATUS, STATUS_MESSAGES } from '@/constants';
+import { DYNAMIC_PATH, routes } from './routes';
+import { STATUS, STATUS_MESSAGES } from '@/constants';
 
 const ERROR_METHOD = `${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].badRequest}`;
 const ERROR_URL = `${STATUS.NOT_FOUND}||${STATUS_MESSAGES[STATUS.NOT_FOUND]}`;

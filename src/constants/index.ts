@@ -5,8 +5,6 @@ export const HTTP_METHODS = {
 	DELETE: 'DELETE',
 } as const;
 
-export const DYNAMIC_PATH = ':id';
-
 export type HttpMethods = keyof typeof HTTP_METHODS;
 
 export const STATUS = {

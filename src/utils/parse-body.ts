@@ -1,11 +1,5 @@
 import { IncomingMessage } from 'node:http';
 
-/**
- * Parse the body of an incoming request as JSON.
- *
- * @param req Incoming HTTP request.
- * @returns Promise that resolves to the parsed JSON body or rejects with an error.
- */
 export async function parseBody(req: IncomingMessage) {
 	return new Promise((resolve, reject) => {
 		let data = '';
@@ -18,7 +12,7 @@ export async function parseBody(req: IncomingMessage) {
 			try {
 				const parsedData = JSON.parse(data);
 				resolve(parsedData);
-			} catch (error) {
+			} catch {
 				reject(new Error('Invalid JSON'));
 			}
 		});

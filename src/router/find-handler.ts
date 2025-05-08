@@ -1,15 +1,11 @@
-import { DYNAMIC_PATH, HttpMethods, STATUS, STATUS_MESSAGES } from '@/constants';
-import { routes } from './routes';
+import { HttpMethods, STATUS, STATUS_MESSAGES } from '@/constants';
+import { DYNAMIC_PATH, routes } from './routes';
 
 interface FindHandlerProps {
 	url: string;
 	method: HttpMethods;
 }
 
-/**
- * Finds the handler for a given URL and HTTP method.
- * Throws {Error} if the method or route is not found.
- */
 export function findHandler({ url, method }: FindHandlerProps) {
 	let current = routes;
 

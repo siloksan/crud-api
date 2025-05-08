@@ -1,16 +1,14 @@
 import request from 'supertest';
-import { server } from './server';
-import { User, UsersDB } from './models';
-import { addRoute } from './router';
-import { UserRepository } from './repositories';
-import { UserService } from './services';
-import { UsersController } from './controllers';
-import { ROUTES } from './router/routes';
-import { STATUS } from './constants';
+import { server } from '../server';
+import { User, UsersDB } from '../models';
+import { addRoute } from '../router';
+import { UserRepository } from '../repositories';
+import { UserService } from '../services';
+import { UsersController } from '../controllers';
+import { ROUTES } from '../router/routes';
+import { STATUS } from '../constants';
 
 const DUMMY_DB: UsersDB = new Map<string, User>([]);
-const newUser = { name: 'John Doe', age: 38, hobbies: ['music', 'sports'] };
-
 const usersRepository = new UserRepository(DUMMY_DB);
 const usersService = new UserService(usersRepository);
 const usersController = new UsersController(usersService);
@@ -24,6 +22,7 @@ addRoute('PUT', ROUTES.API.USERS.ID, usersController.update);
 addRoute('DELETE', ROUTES.API.USERS.ID, usersController.delete);
 
 describe('User API Tests', () => {
+	const newUser = { name: 'John Doe', age: 38, hobbies: ['music', 'sports'] };
 	afterAll(() => {
 		server.close();
 	});

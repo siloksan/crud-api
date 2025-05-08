@@ -11,7 +11,8 @@
 		"lint:code": "eslint \"src/**/*.ts\" --fix",
 		"lint:types": "tsc --noEmit",
 		"lint": "npm run lint:code && npm run lint:types",
-		"format": "prettier --write .",
+		"format": "prettier --check ./src",
+		"format:fix": "prettier --write ./src",
 		"test": "jest --silent",
 		"test:verbose": "jest"
 	},
