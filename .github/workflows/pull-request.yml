@@ -27,7 +27,7 @@ jobs:
             - name: install modules
               run: npm install
             - name: build project
-              run: npm run start:prod
+              run: npm run build
             - name: run test
               run: npm run test
             - name: format code

@@ -26,7 +26,7 @@ jobs:
             - name: clean build directory
               run: rm -rf dist
             - name: build project
-              run: npm run start:prod
+              run: npm run build
             - name: run test
               run: npm run test
             - name: format code
