@@ -50,5 +50,3 @@ export class UserRepository implements Repository<UserData, UserData> {
 		return true;
 	}
 }
-
-const dontUse = 0;
