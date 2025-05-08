@@ -5,14 +5,14 @@ import { isValidUser } from '@/validators';
 
 export class ClusterUserRepository implements Repository<User, UserData> {
 	getAll(): Promise<User[]> {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			const onMessage = (message: Message) => {
 				if (message.type === USER_CLUSTER_ACTIONS_REQ.GET) {
 					process.off('message', onMessage);
 					if (Array.isArray(message.data) && message.data.every((item) => isValidUser(item))) {
 						resolve(message.data);
 					} else {
-						resolve([]);
+						reject(new Error(message.data as unknown as string));
 					}
 				}
 			};
@@ -22,12 +22,14 @@ export class ClusterUserRepository implements Repository<User, UserData> {
 	}
 
 	getById(id: string): Promise<User> {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			const onMessage = (message: Message) => {
 				if (message.type === USER_CLUSTER_ACTIONS_REQ.GET_BY_ID) {
 					process.off('message', onMessage);
 					if (isValidUser(message.data)) {
 						resolve(message.data);
+					} else {
+						reject(new Error(message.data as unknown as string));
 					}
 				}
 			};
@@ -36,12 +38,14 @@ export class ClusterUserRepository implements Repository<User, UserData> {
 		});
 	}
 	create(data: UserData): Promise<User> {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			const onMessage = (message: Message) => {
 				if (message.type === USER_CLUSTER_ACTIONS_REQ.CREATE) {
 					process.off('message', onMessage);
 					if (isValidUser(message.data)) {
 						resolve(message.data);
+					} else {
+						reject(new Error(message.data as unknown as string));
 					}
 				}
 			};
@@ -50,12 +54,14 @@ export class ClusterUserRepository implements Repository<User, UserData> {
 		});
 	}
 	update(id: string, data: Partial<UserData>): Promise<User> {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			const onMessage = (message: Message) => {
 				if (message.type === USER_CLUSTER_ACTIONS_REQ.UPDATE) {
 					process.off('message', onMessage);
 					if (isValidUser(message.data)) {
 						resolve(message.data);
+					} else {
+						reject(new Error(message.data as unknown as string));
 					}
 				}
 			};
@@ -65,15 +71,18 @@ export class ClusterUserRepository implements Repository<User, UserData> {
 		});
 	}
 	delete(id: string): Promise<boolean> {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			const onMessage = (message: Message) => {
 				if (message.type === USER_CLUSTER_ACTIONS_REQ.DELETE) {
 					process.off('message', onMessage);
 					if (typeof message.data === 'boolean') {
 						resolve(message.data);
+					} else {
+						reject(new Error(message.data as unknown as string));
 					}
 				}
 			};
+
 			process.on('message', onMessage);
 			process.send?.({ type: USER_CLUSTER_ACTIONS_RES.DELETE, data: id });
 		});

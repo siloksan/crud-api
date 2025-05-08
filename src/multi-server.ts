@@ -17,20 +17,39 @@ if (cluster.isPrimary) {
 	cluster.on('message', async (worker, message: Message) => {
 		switch (message.type) {
 			case USER_CLUSTER_ACTIONS_RES.GET: {
-				const users = await dbManager.getAll();
-				worker.send({ type: USER_CLUSTER_ACTIONS_REQ.GET, data: users });
+				try {
+					const users = await dbManager.getAll();
+					worker.send({ type: USER_CLUSTER_ACTIONS_REQ.GET, data: users });
+				} catch (error) {
+					if (error instanceof Error) {
+						worker.send({ type: USER_CLUSTER_ACTIONS_REQ.GET, data: error.message });
+					}
+				}
+
 				break;
 			}
 			case USER_CLUSTER_ACTIONS_RES.GET_BY_ID:
 				if (isNonEmptyString(message.data)) {
-					const user = await dbManager.getById(message.data);
-					worker.send({ type: USER_CLUSTER_ACTIONS_REQ.GET_BY_ID, data: user });
+					try {
+						const user = await dbManager.getById(message.data);
+						worker.send({ type: USER_CLUSTER_ACTIONS_REQ.GET_BY_ID, data: user });
+					} catch (error) {
+						if (error instanceof Error) {
+							worker.send({ type: USER_CLUSTER_ACTIONS_REQ.GET_BY_ID, data: error.message });
+						}
+					}
 				}
 				break;
 			case USER_CLUSTER_ACTIONS_RES.CREATE:
 				if (isValidUserData(message.data)) {
-					const user = await dbManager.create(message.data);
-					worker.send({ type: USER_CLUSTER_ACTIONS_REQ.CREATE, data: user });
+					try {
+						const user = await dbManager.create(message.data);
+						worker.send({ type: USER_CLUSTER_ACTIONS_REQ.CREATE, data: user });
+					} catch (error) {
+						if (error instanceof Error) {
+							worker.send({ type: USER_CLUSTER_ACTIONS_REQ.CREATE, data: error.message });
+						}
+					}
 				}
 				break;
 			case USER_CLUSTER_ACTIONS_RES.UPDATE: {
@@ -39,15 +58,27 @@ if (cluster.isPrimary) {
 				}
 				const { id, ...userProperty } = message.data;
 				if (isValidUserProperty(userProperty) && isNonEmptyString(id)) {
-					const user = await dbManager.update(id, userProperty);
-					worker.send({ type: USER_CLUSTER_ACTIONS_REQ.UPDATE, data: user });
+					try {
+						const user = await dbManager.update(id, userProperty);
+						worker.send({ type: USER_CLUSTER_ACTIONS_REQ.UPDATE, data: user });
+					} catch (error) {
+						if (error instanceof Error) {
+							worker.send({ type: USER_CLUSTER_ACTIONS_REQ.UPDATE, data: error.message });
+						}
+					}
 				}
 				break;
 			}
 			case USER_CLUSTER_ACTIONS_RES.DELETE: {
 				if (isNonEmptyString(message.data)) {
-					const response = await dbManager.delete(message.data);
-					worker.send({ type: USER_CLUSTER_ACTIONS_REQ.DELETE, data: response });
+					try {
+						const response = await dbManager.delete(message.data);
+						worker.send({ type: USER_CLUSTER_ACTIONS_REQ.DELETE, data: response });
+					} catch (error) {
+						if (error instanceof Error) {
+							worker.send({ type: USER_CLUSTER_ACTIONS_REQ.DELETE, data: error.message });
+						}
+					}
 				}
 				break;
 			}

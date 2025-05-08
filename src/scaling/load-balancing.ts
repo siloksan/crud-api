@@ -29,6 +29,7 @@ export class LoadBalancer {
 				headers: req.headers,
 			};
 
+			console.log(`Worker on port: ${worker.port} handling request for: ${req.url}`);
 			const proxy = http.request(options, (workerRes) => {
 				res.writeHead(workerRes.statusCode ?? STATUS.INTERNAL_SERVER_ERROR, workerRes.headers);
 				workerRes.pipe(res, { end: true });

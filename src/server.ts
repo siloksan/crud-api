@@ -36,6 +36,9 @@ export const server = http.createServer(async (req, res) => {
 
 				res.end(JSON.stringify({ message: messageBody }));
 				console.log(`[${method}]${url} status: ${statusCode}`);
+			} else {
+				res.writeHead(STATUS.INTERNAL_SERVER_ERROR, { 'Content-Type': 'application/json' });
+				res.end(JSON.stringify({ message: STATUS_MESSAGES[STATUS.INTERNAL_SERVER_ERROR] }));
 			}
 		}
 	}

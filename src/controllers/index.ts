@@ -62,7 +62,7 @@ export class UsersController {
 			const createdUser = await this.usersService.create(user);
 			res.writeHead(STATUS.CREATED, { 'Content-Type': 'application/json, charset=utf-8' });
 			res.end(JSON.stringify(createdUser));
-		} catch (error) {
+		} catch {
 			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidData}`);
 		}
 	};
@@ -84,12 +84,12 @@ export class UsersController {
 			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidData}`);
 		}
 
-		console.log('user: ', user);
-		const updatedUser = await this.usersService.update(id, user);
-
-		if (user) {
+		try {
+			const updatedUser = await this.usersService.update(id, user);
 			res.writeHead(STATUS.OK, { 'Content-Type': 'application/json, charset=utf-8' });
 			res.end(JSON.stringify(updatedUser));
+		} catch (error) {
+			throw error;
 		}
 	};
 
