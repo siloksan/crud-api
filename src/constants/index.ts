@@ -30,21 +30,22 @@ export const STATUS_MESSAGES = {
 	[STATUS.SERVICE_UNAVAILABLE]: 'Service Unavailable',
 } as const;
 
-export const USER_CLUSTER_ACTIONS_RES = {
-	GET: 'getUsersRes',
-	GET_BY_ID: 'getByIdRes',
-	CREATE: 'createRes',
-	UPDATE: 'updateRes',
-	DELETE: 'deleteRes',
+export const ACTIONS_TYPES = {
+	GET_USERS: 'GET_USERS',
+	GET_USER_BY_ID: 'GET_USER_BY_ID',
+	CREATE_USERS: 'CREATE_USERS',
+	UPDATE_USER: 'UPDATE_USER',
+	DELETE_USER: 'DELETE_USER',
+	ERROR: 'ERROR',
 } as const;
 
-export const USER_CLUSTER_ACTIONS_REQ = {
-	GET: 'getUsersReq',
-	GET_BY_ID: 'getByIdReq',
-	CREATE: 'createReq',
-	UPDATE: 'updateReq',
-	DELETE: 'deleteReq',
-} as const;
+// export const USER_CLUSTER_ACTIONS_REQ = {
+// 	GET: 'getUsersReq',
+// 	GET_BY_ID: 'getByIdReq',
+// 	CREATE: 'createReq',
+// 	UPDATE: 'updateReq',
+// 	DELETE: 'deleteReq',
+// } as const;
 
-export type MessageTypeRes = (typeof USER_CLUSTER_ACTIONS_RES)[keyof typeof USER_CLUSTER_ACTIONS_RES];
-export type MessageTypeReq = (typeof USER_CLUSTER_ACTIONS_REQ)[keyof typeof USER_CLUSTER_ACTIONS_REQ];
+export type ActionsType = (typeof ACTIONS_TYPES)[keyof typeof ACTIONS_TYPES];
+// export type MessageTypeReq = (typeof USER_CLUSTER_ACTIONS_REQ)[keyof typeof USER_CLUSTER_ACTIONS_REQ];

@@ -55,3 +55,5 @@ export function startServer(port: number) {
 		console.log(`Server is running on http://localhost:${port}`);
 	});
 }
+
+async function requestHandler

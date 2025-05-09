@@ -1,4 +1,4 @@
-import { MessageTypeReq, MessageTypeRes } from '@/constants';
+import { ActionsType } from '@/constants';
 import { User, UserData } from '@/models';
 import { IncomingMessage, ServerResponse } from 'node:http';
 
@@ -15,9 +15,19 @@ export interface Repository<T, TData> {
 	delete(id: string): Promise<boolean>;
 }
 
-type MessageData = User[] | UserData | boolean;
+type ErrorData = {
+	message: Error['message'];
+	stack?: Error['stack'];
+};
+
+type ResponseData = {
+	status: number;
+	message: User[] | UserData | boolean;
+};
+
+type MessageData = ResponseData | ErrorData;
 
 export interface Message {
-	type: MessageTypeRes | MessageTypeReq;
+	type: ActionsType;
 	data: MessageData;
 }

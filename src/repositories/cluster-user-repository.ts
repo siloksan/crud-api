@@ -2,6 +2,7 @@ import { USER_CLUSTER_ACTIONS_REQ, USER_CLUSTER_ACTIONS_RES } from '@/constants'
 import { User, UserData } from '@/models';
 import { Message, Repository } from '@/types';
 import { isValidUser } from '@/validators';
+import process from 'node:process';
 
 export class ClusterUserRepository implements Repository<User, UserData> {
 	getAll(): Promise<User[]> {

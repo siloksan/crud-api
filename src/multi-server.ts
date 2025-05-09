@@ -3,22 +3,36 @@ import { LoadBalancer, getWorkers } from '@/scaling';
 import { startServer } from './server';
 import { UserRepository } from './repositories';
 import { DB } from './db';
-import { USER_CLUSTER_ACTIONS_RES, USER_CLUSTER_ACTIONS_REQ } from './constants';
 import { Message } from './types';
 import { isNonEmptyString, isObject, isValidUserData, isValidUserProperty } from './validators';
+import { UserService } from './services';
+import { UsersController } from './controllers';
+import { IncomingMessage } from 'node:http';
 
 const BASE_PORT = Number(process.env.PORT ?? 4000);
 
 if (cluster.isPrimary) {
 	console.log(`Primary process ${process.pid} is running`);
 
-	const dbManager = new UserRepository(DB);
+	const usersRepository = new UserRepository(DB);
+	const usersService = new UserService(usersRepository);
+	const dbManager = new UsersController(usersService);
+	// const dbManager = new UserRepository(DB);
 
-	cluster.on('message', async (worker, message: Message) => {
+	cluster.on('message', async (worker, message: IncomingMessage) => {
+		// const incomingMessage: IncomingMessage = {
+		// 	method: message.method,
+		// 	url: message.url,
+		// 	headers: message.headers,
+		// 	socket: message.socket,
+		// 	statusCode: message.statusCode,
+		// 	statusMessage: message.statusMessage,
+		// };
 		switch (message.type) {
 			case USER_CLUSTER_ACTIONS_RES.GET: {
 				try {
-					const users = await dbManager.getAll();
+					const users = await dbManager.getUsers();
+					const messageData = message.data as Message;
 					worker.send({ type: USER_CLUSTER_ACTIONS_REQ.GET, data: users });
 				} catch (error) {
 					if (error instanceof Error) {

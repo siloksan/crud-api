@@ -1,6 +1,7 @@
-import { STATUS, STATUS_MESSAGES } from '@/constants';
+import { ACTIONS_TYPES, STATUS, STATUS_MESSAGES } from '@/constants';
 import { UserService } from '@/services';
-import { ControllerProps } from '@/types';
+import { ControllerProps, Message } from '@/types';
+import { getErrorMessage } from '@/utils/get-error-message';
 import { parseBody } from '@/utils/parse-body';
 import { isValidUserData, isValidUserProperty } from '@/validators';
 
@@ -11,16 +12,20 @@ export class UsersController {
 		this.usersService = usersService;
 	}
 
-	getUsers = async ({ res }: ControllerProps) => {
+	getUsers = async () => {
+		let message: Message;
 		try {
 			const users = await this.usersService.getAll();
-			res.writeHead(STATUS.OK, { 'Content-Type': 'application/json, charset=utf-8' });
-			res.end(JSON.stringify(users));
+			message = {
+				type: ACTIONS_TYPES.GET_USERS,
+				data: { status: STATUS.OK, message: users },
+			};
+			return message;
 		} catch (error) {
-			if (error instanceof Error) {
-				throw new Error(`${STATUS.INTERNAL_SERVER_ERROR}||${STATUS_MESSAGES[STATUS.INTERNAL_SERVER_ERROR]}`);
-			}
+			message = getErrorMessage(error);
 		}
+
+		return message;
 	};
 
 	getById = async ({ req, res }: ControllerProps) => {
