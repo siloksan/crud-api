@@ -2,7 +2,7 @@ import { STATUS, STATUS_MESSAGES } from '@/constants';
 import { UserService } from '@/services';
 import { ControllerProps } from '@/types';
 import { parseBody } from '@/utils/parse-body';
-import { isValidUserData, isValidUserProperty } from '@/validators';
+import { isUUIDv4, isValidUserData, isValidUserProperty } from '@/validators';
 
 export class UsersController {
 	private readonly usersService: UserService;
@@ -31,7 +31,7 @@ export class UsersController {
 		const url = req.url;
 		const id = url?.split('/').pop();
 
-		if (!id) {
+		if (!id || !isUUIDv4(id)) {
 			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidId}`);
 		}
 
@@ -75,7 +75,7 @@ export class UsersController {
 		const url = req.url;
 		const id = url?.split('/').pop();
 
-		if (!id) {
+		if (!id || !isUUIDv4(id)) {
 			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidId}`);
 		}
 
@@ -97,9 +97,10 @@ export class UsersController {
 		const url = req.url;
 		const id = url?.split('/').pop();
 
-		if (!id) {
+		if (!id || !isUUIDv4(id)) {
 			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidId}`);
 		}
+
 		const result = await this.usersService.delete(id);
 		if (result) {
 			res.writeHead(204, { 'Content-Type': 'text/plain' });

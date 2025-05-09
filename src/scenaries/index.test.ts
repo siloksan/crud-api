@@ -23,9 +23,6 @@ addRoute('DELETE', ROUTES.API.USERS.ID, usersController.delete);
 
 describe('User API Tests', () => {
 	const newUser = { name: 'John Doe', age: 38, hobbies: ['music', 'sports'] };
-	afterAll(() => {
-		server.close();
-	});
 
 	afterEach(() => {
 		DUMMY_DB.clear();
