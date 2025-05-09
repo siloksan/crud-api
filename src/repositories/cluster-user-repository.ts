@@ -1,91 +1,44 @@
-import { USER_CLUSTER_ACTIONS_REQ, USER_CLUSTER_ACTIONS_RES } from '@/constants';
+import { DBActions, DB_ACTIONS } from '@/constants';
 import { User, UserData } from '@/models';
-import { Message, Repository } from '@/types';
-import { isValidUser } from '@/validators';
-import process from 'node:process';
+import { IncomingData, MessageFromDB, MessageToDB, Repository } from '@/types';
 
 export class ClusterUserRepository implements Repository<User, UserData> {
-	getAll(): Promise<User[]> {
+	private sendMessageToDB(incomingMessage: MessageToDB) {
+		process.send?.(incomingMessage);
+	}
+
+	private getMessageFromDB<T>(dbAction: DBActions, data?: IncomingData): Promise<T> {
 		return new Promise((resolve, reject) => {
-			const onMessage = (message: Message) => {
-				if (message.type === USER_CLUSTER_ACTIONS_REQ.GET) {
-					process.off('message', onMessage);
-					if (Array.isArray(message.data) && message.data.every((item) => isValidUser(item))) {
-						resolve(message.data);
+			const onMessage = (message: MessageFromDB) => {
+				if (message.type === dbAction) {
+					process.off('message', this.getMessageFromDB);
+					if (message.data.isError) {
+						reject(new Error(message.data.errorMessage));
 					} else {
-						reject(new Error(message.data as unknown as string));
+						resolve(message.data as T);
 					}
 				}
 			};
+
 			process.on('message', onMessage);
-			process.send?.({ type: USER_CLUSTER_ACTIONS_RES.GET });
+			this.sendMessageToDB({ type: dbAction, data });
 		});
+	}
+
+	getAll(): Promise<User[]> {
+		return this.getMessageFromDB<User[]>(DB_ACTIONS.GET_ALL);
 	}
 
 	getById(id: string): Promise<User> {
-		return new Promise((resolve, reject) => {
-			const onMessage = (message: Message) => {
-				if (message.type === USER_CLUSTER_ACTIONS_REQ.GET_BY_ID) {
-					process.off('message', onMessage);
-					if (isValidUser(message.data)) {
-						resolve(message.data);
-					} else {
-						reject(new Error(message.data as unknown as string));
-					}
-				}
-			};
-			process.on('message', onMessage);
-			process.send?.({ type: USER_CLUSTER_ACTIONS_RES.GET_BY_ID, data: id });
-		});
+		return this.getMessageFromDB<User>(DB_ACTIONS.GET_BY_ID, id);
 	}
 	create(data: UserData): Promise<User> {
-		return new Promise((resolve, reject) => {
-			const onMessage = (message: Message) => {
-				if (message.type === USER_CLUSTER_ACTIONS_REQ.CREATE) {
-					process.off('message', onMessage);
-					if (isValidUser(message.data)) {
-						resolve(message.data);
-					} else {
-						reject(new Error(message.data as unknown as string));
-					}
-				}
-			};
-			process.on('message', onMessage);
-			process.send?.({ type: USER_CLUSTER_ACTIONS_RES.CREATE, data });
-		});
+		return this.getMessageFromDB<User>(DB_ACTIONS.CREATE, data);
 	}
 	update(id: string, data: Partial<UserData>): Promise<User> {
-		return new Promise((resolve, reject) => {
-			const onMessage = (message: Message) => {
-				if (message.type === USER_CLUSTER_ACTIONS_REQ.UPDATE) {
-					process.off('message', onMessage);
-					if (isValidUser(message.data)) {
-						resolve(message.data);
-					} else {
-						reject(new Error(message.data as unknown as string));
-					}
-				}
-			};
-			process.on('message', onMessage);
-			const messageData = { id, ...data };
-			process.send?.({ type: USER_CLUSTER_ACTIONS_RES.UPDATE, data: messageData });
-		});
+		return this.getMessageFromDB<User>(DB_ACTIONS.UPDATE, { id, ...data });
 	}
 	delete(id: string): Promise<boolean> {
-		return new Promise((resolve, reject) => {
-			const onMessage = (message: Message) => {
-				if (message.type === USER_CLUSTER_ACTIONS_REQ.DELETE) {
-					process.off('message', onMessage);
-					if (typeof message.data === 'boolean') {
-						resolve(message.data);
-					} else {
-						reject(new Error(message.data as unknown as string));
-					}
-				}
-			};
-
-			process.on('message', onMessage);
-			process.send?.({ type: USER_CLUSTER_ACTIONS_RES.DELETE, data: id });
-		});
+		return this.getMessageFromDB<boolean>(DB_ACTIONS.DELETE, id);
 	}
 }

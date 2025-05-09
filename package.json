@@ -6,7 +6,7 @@
 	"scripts": {
 		"start:dev": "nodemon --watch src --ext ts,json --exec ts-node -r tsconfig-paths/register  src/single-server.ts",
 		"start:prod": "npm run build && node dist/index.js",
-		"start:multi": "nodemon --watch src --ext ts,json --exec ts-node -r tsconfig-paths/register src/multi-server.ts -- --worker",
+		"start:multi": "nodemon --watch src --ext ts,json --exec ts-node -r tsconfig-paths/register src/multi-server.ts",
 		"build": "webpack --config webpack.config.js",
 		"lint:code": "eslint \"src/**/*.ts\" --fix",
 		"lint:types": "tsc --noEmit",

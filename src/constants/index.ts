@@ -30,22 +30,12 @@ export const STATUS_MESSAGES = {
 	[STATUS.SERVICE_UNAVAILABLE]: 'Service Unavailable',
 } as const;
 
-export const ACTIONS_TYPES = {
-	GET_USERS: 'GET_USERS',
-	GET_USER_BY_ID: 'GET_USER_BY_ID',
-	CREATE_USERS: 'CREATE_USERS',
-	UPDATE_USER: 'UPDATE_USER',
-	DELETE_USER: 'DELETE_USER',
-	ERROR: 'ERROR',
+export const DB_ACTIONS = {
+	GET_ALL: 'GET_ALL',
+	GET_BY_ID: 'GET_BY_ID',
+	CREATE: 'CREATE',
+	UPDATE: 'UPDATE',
+	DELETE: 'DELETE',
 } as const;
 
-// export const USER_CLUSTER_ACTIONS_REQ = {
-// 	GET: 'getUsersReq',
-// 	GET_BY_ID: 'getByIdReq',
-// 	CREATE: 'createReq',
-// 	UPDATE: 'updateReq',
-// 	DELETE: 'deleteReq',
-// } as const;
-
-export type ActionsType = (typeof ACTIONS_TYPES)[keyof typeof ACTIONS_TYPES];
-// export type MessageTypeReq = (typeof USER_CLUSTER_ACTIONS_REQ)[keyof typeof USER_CLUSTER_ACTIONS_REQ];
+export type DBActions = keyof typeof DB_ACTIONS;

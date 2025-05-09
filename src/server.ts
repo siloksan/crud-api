@@ -1,13 +1,12 @@
-import * as http from 'node:http';
+import http from 'node:http';
 import { HTTP_METHODS, HttpMethods, STATUS, STATUS_MESSAGES } from '@/constants';
 import { findHandler, addRoute } from '@/router';
 import { DB } from './db';
-import { UserRepository } from '@/repositories';
+import { ClusterUserRepository, UserRepository } from '@/repositories';
 import { UserService } from '@/services';
 import { UsersController } from '@/controllers';
 import { ROUTES } from './router/routes';
 import { argv } from 'node:process';
-import { ClusterUserRepository } from './repositories/cluster-user-repository';
 
 const isWorker = argv.includes('--worker');
 const usersRepository = isWorker ? new ClusterUserRepository() : new UserRepository(DB);
@@ -55,5 +54,3 @@ export function startServer(port: number) {
 		console.log(`Server is running on http://localhost:${port}`);
 	});
 }
-
-async function requestHandler

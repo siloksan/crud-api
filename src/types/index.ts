@@ -1,5 +1,5 @@
-import { ActionsType } from '@/constants';
-import { User, UserData } from '@/models';
+import { DBActions } from '@/constants';
+import { User } from '@/models';
 import { IncomingMessage, ServerResponse } from 'node:http';
 
 export interface ControllerProps {
@@ -15,19 +15,26 @@ export interface Repository<T, TData> {
 	delete(id: string): Promise<boolean>;
 }
 
-type ErrorData = {
-	message: Error['message'];
-	stack?: Error['stack'];
-};
+export type IncomingData = Partial<User> | string | undefined;
 
-type ResponseData = {
-	status: number;
-	message: User[] | UserData | boolean;
-};
+export interface MessageToDB {
+	type: DBActions;
+	data: IncomingData;
+}
 
-type MessageData = ResponseData | ErrorData;
+interface SuccessData {
+	isError: false;
+	data: User[] | User | boolean | string;
+}
 
-export interface Message {
-	type: ActionsType;
-	data: MessageData;
+interface ErrorData {
+	isError: true;
+	errorMessage: string;
+}
+
+export type OutComingData = SuccessData | ErrorData;
+
+export interface MessageFromDB {
+	type: DBActions;
+	data: OutComingData;
 }

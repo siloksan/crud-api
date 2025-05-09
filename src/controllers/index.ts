@@ -1,7 +1,6 @@
-import { ACTIONS_TYPES, STATUS, STATUS_MESSAGES } from '@/constants';
+import { STATUS, STATUS_MESSAGES } from '@/constants';
 import { UserService } from '@/services';
-import { ControllerProps, Message } from '@/types';
-import { getErrorMessage } from '@/utils/get-error-message';
+import { ControllerProps } from '@/types';
 import { parseBody } from '@/utils/parse-body';
 import { isValidUserData, isValidUserProperty } from '@/validators';
 
@@ -12,20 +11,16 @@ export class UsersController {
 		this.usersService = usersService;
 	}
 
-	getUsers = async () => {
-		let message: Message;
+	getUsers = async ({ res }: ControllerProps) => {
 		try {
 			const users = await this.usersService.getAll();
-			message = {
-				type: ACTIONS_TYPES.GET_USERS,
-				data: { status: STATUS.OK, message: users },
-			};
-			return message;
+			res.writeHead(STATUS.OK, { 'Content-Type': 'application/json, charset=utf-8' });
+			res.end(JSON.stringify(users));
 		} catch (error) {
-			message = getErrorMessage(error);
+			if (error instanceof Error) {
+				throw new Error(`${STATUS.INTERNAL_SERVER_ERROR}||${STATUS_MESSAGES[STATUS.INTERNAL_SERVER_ERROR]}`);
+			}
 		}
-
-		return message;
 	};
 
 	getById = async ({ req, res }: ControllerProps) => {
@@ -89,13 +84,9 @@ export class UsersController {
 			throw new Error(`${STATUS.BAD_REQUEST}||${STATUS_MESSAGES[STATUS.BAD_REQUEST].invalidData}`);
 		}
 
-		try {
-			const updatedUser = await this.usersService.update(id, user);
-			res.writeHead(STATUS.OK, { 'Content-Type': 'application/json, charset=utf-8' });
-			res.end(JSON.stringify(updatedUser));
-		} catch (error) {
-			throw error;
-		}
+		const updatedUser = await this.usersService.update(id, user);
+		res.writeHead(STATUS.OK, { 'Content-Type': 'application/json, charset=utf-8' });
+		res.end(JSON.stringify(updatedUser));
 	};
 
 	delete = async ({ req, res }: ControllerProps) => {
