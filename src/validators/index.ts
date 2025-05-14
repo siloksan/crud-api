@@ -1,0 +1,76 @@
+import { User, UserData } from '@/models';
+
+export function isNonEmptyString(input?: unknown): input is string {
+	return typeof input === 'string' && input?.length > 0;
+}
+
+export function isNullable(value: unknown): value is null | undefined {
+	return value === null || typeof value === 'undefined';
+}
+
+export function isObject(value: unknown): value is object {
+	return Object.prototype.toString.call(value) === '[object Object]';
+}
+
+function isArrayString(value: unknown): value is string[] {
+	return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
+export function isValidUserData(user: unknown): user is UserData {
+	if (!isObject(user)) {
+		return false;
+	}
+
+	if (Array.from(Object.keys(user)).length !== 3) {
+		return false;
+	}
+
+	if (!('username' in user) || !('age' in user) || !('hobbies' in user)) {
+		return false;
+	}
+
+	return typeof user.username === 'string' && typeof user.age === 'number' && isArrayString(user.hobbies);
+}
+
+export function isValidUserProperty(userData: unknown): userData is Partial<UserData> {
+	if (!isObject(userData)) {
+		return false;
+	}
+
+	const allowedKeys = ['username', 'age', 'hobbies'];
+	const userDataKeys = Object.keys(userData);
+
+	if (userDataKeys.length > 3) {
+		return false;
+	}
+
+	if ('username' in userData && typeof userData.username !== 'string') {
+		return false;
+	}
+
+	if ('age' in userData && typeof userData.age !== 'number') {
+		return false;
+	}
+
+	if ('hobbies' in userData && !isArrayString(userData.hobbies)) {
+		return false;
+	}
+
+	return !userDataKeys.some((key) => !allowedKeys.includes(key));
+}
+
+export function isValidUser(user: unknown): user is User {
+	if (!isObject(user) || !('id' in user)) {
+		return false;
+	}
+
+	const { id, ...userData } = user || {};
+	if (!isValidUserData(userData)) {
+		return false;
+	}
+	return isNonEmptyString(id);
+}
+
+export function isUUIDv4(id: string): boolean {
+	return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
+}

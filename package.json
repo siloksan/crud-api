@@ -1,0 +1,47 @@
+{
+	"name": "crud-api",
+	"version": "1.0.0",
+	"description": "CRUD API with in-memory database",
+	"main": "dist/index.js",
+	"scripts": {
+		"start:dev": "nodemon --watch src --ext ts,json --exec ts-node -r tsconfig-paths/register  src/single-server.ts",
+		"start:prod": "npm run build && node dist/index.js",
+		"start:multi": "nodemon --watch src --ext ts,json --exec ts-node -r tsconfig-paths/register src/multi-server.ts --worker",
+		"build": "webpack --config webpack.config.js",
+		"lint:code": "eslint \"src/**/*.ts\" --fix",
+		"lint:types": "tsc --noEmit",
+		"lint": "npm run lint:code && npm run lint:types",
+		"format": "prettier --check ./src",
+		"format:fix": "prettier --write ./src",
+		"test": "jest --silent",
+		"test:verbose": "jest"
+	},
+	"dependencies": {
+		"dotenv": "^16.1.4"
+	},
+	"devDependencies": {
+		"@types/jest": "^29.5.2",
+		"@types/node": "^20.6.1",
+		"@types/supertest": "^6.0.2",
+		"@typescript-eslint/eslint-plugin": "^6.21.0",
+		"@typescript-eslint/parser": "^6.21.0",
+		"cross-env": "^7.0.3",
+		"eslint": "^8.57.1",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-import-resolver-typescript": "^3.6.3",
+		"eslint-plugin-prettier": "^5.2.1",
+		"jest": "^29.7.0",
+		"lint-staged": "^15.2.10",
+		"nodemon": "^3.0.1",
+		"prettier": "^3.0.3",
+		"supertest": "^7.0.0",
+		"ts-jest": "^29.1.0",
+		"ts-loader": "^9.5.1",
+		"ts-node-dev": "^2.0.0",
+		"tsconfig-paths": "^4.2.0",
+		"typescript": "^5.3.3",
+		"webpack": "^5.89.0",
+		"webpack-cli": "^5.1.4",
+		"webpack-node-externals": "^3.0.0"
+	}
+}
