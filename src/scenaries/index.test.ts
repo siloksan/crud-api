@@ -22,7 +22,7 @@ addRoute('PUT', ROUTES.API.USERS.ID, usersController.update);
 addRoute('DELETE', ROUTES.API.USERS.ID, usersController.delete);
 
 describe('User API Tests', () => {
-	const newUser = { name: 'John Doe', age: 38, hobbies: ['music', 'sports'] };
+	const newUser = { username: 'John Doe', age: 38, hobbies: ['music', 'sports'] };
 
 	afterEach(() => {
 		DUMMY_DB.clear();
@@ -60,7 +60,7 @@ describe('User API Tests', () => {
 		const createdUser = response.body;
 		const { id } = createdUser;
 
-		const newData = { ...newUser, ...{ name: 'Jane Doe' } };
+		const newData = { ...newUser, ...{ username: 'Jane Doe' } };
 		const updatedUser = await request(server)
 			.put(`/api/users/${id}`)
 			.send(newData)

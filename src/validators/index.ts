@@ -25,11 +25,11 @@ export function isValidUserData(user: unknown): user is UserData {
 		return false;
 	}
 
-	if (!('name' in user) || !('age' in user) || !('hobbies' in user)) {
+	if (!('username' in user) || !('age' in user) || !('hobbies' in user)) {
 		return false;
 	}
 
-	return typeof user.name === 'string' && typeof user.age === 'number' && isArrayString(user.hobbies);
+	return typeof user.username === 'string' && typeof user.age === 'number' && isArrayString(user.hobbies);
 }
 
 export function isValidUserProperty(userData: unknown): userData is Partial<UserData> {
@@ -37,14 +37,14 @@ export function isValidUserProperty(userData: unknown): userData is Partial<User
 		return false;
 	}
 
-	const allowedKeys = ['name', 'age', 'hobbies'];
+	const allowedKeys = ['username', 'age', 'hobbies'];
 	const userDataKeys = Object.keys(userData);
 
 	if (userDataKeys.length > 3) {
 		return false;
 	}
 
-	if ('name' in userData && typeof userData.name !== 'string') {
+	if ('username' in userData && typeof userData.username !== 'string') {
 		return false;
 	}
 

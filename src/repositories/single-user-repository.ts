@@ -22,8 +22,8 @@ export class UserRepository implements Repository<UserData, UserData> {
 
 	public async create(user: UserData) {
 		const id = uuidv4();
-		const { age, hobbies, name } = user;
-		const newUser = { id, name, age, hobbies };
+		const { age, hobbies, username } = user;
+		const newUser = { id, username, age, hobbies };
 
 		this.users.set(id, newUser);
 		return this.users.get(id);
